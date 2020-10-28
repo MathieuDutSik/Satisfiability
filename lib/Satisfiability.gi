@@ -2,8 +2,8 @@ FileMINISAT:=Filename(DirectoriesPackagePrograms("MyPolyhedral"),"minisat");
 FileConvertMINISAToutput:=Filename(DirectoriesPackagePrograms("MyPolyhedral"),"MinisatToGAP");
 
 
-
-SolveCNF:=function(ListCNF)
+InstallGlobalFunction(SolveCNF,
+function(ListCNF)
   local FileIn, FileErr, FileOut, FileRes, nbCNF, nbVAR, eCNF, LVal, output, eVal, TheCommand, TheRes;
   FileIn:=Filename(POLYHEDRAL_tmpdir,"Minisat.in");
   FileErr:=Filename(POLYHEDRAL_tmpdir,"Minisat.err");
@@ -37,9 +37,11 @@ SolveCNF:=function(ListCNF)
   RemoveFileIfExist(FileOut);
   RemoveFileIfExist(FileRes);
   return TheRes;
-end;
+end);
 
-SolveCNF_number:=function(ListCNF, nbMax)
+
+InstallGlobalFunction(SolveCNF_number,
+function(ListCNF, nbMax)
   local ListSolution, ListCNFcomplex, eCNF, eSol, fCNF, len, iVert, SolCNF;
   ListSolution:=[];
   while(true)
@@ -75,4 +77,4 @@ SolveCNF_number:=function(ListCNF, nbMax)
     fi;
   od;
   return ListSolution;
-end;
+end);

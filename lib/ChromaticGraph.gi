@@ -127,7 +127,8 @@ sat_private@GetListCNFspecifyPartialColoring:=function(nbVert, nbColor, ListPair
   return ListCNF;
 end;
 
-SAT_ExtendPartialColoring:=function(GRA, nbColor, ListPair)
+InstallGlobalFunction(SAT_ExtendPartialColoring,
+function(GRA, nbColor, ListPair)
     local ListCNF;
     ListCNF:=sat_private@GetSatisfiabilityForColoring(GRA, nbColor);
     nbVert:=GRA.order;
@@ -137,11 +138,12 @@ SAT_ExtendPartialColoring:=function(GRA, nbColor, ListPair)
         return false;
     fi;
     return sat_private@GetColoring(SolCNF, nbVert, nbColor);
-end;
+end);
 
 
 
-SAT_TestChromaticNumber:=function(GRA, nbColor)
+InstallGlobalFunction(SAT_TestChromaticNumber,
+function(GRA, nbColor)
     local ListCNF, SolCNF, nbVert;
     ListCNF:=sat_private@GetSatisfiabilityForColoring(GRA, nbColor);
     SolCNF:=SolveCNF(ListCNF);
@@ -150,21 +152,22 @@ SAT_TestChromaticNumber:=function(GRA, nbColor)
     fi;
     nbVert:=GRA.order;
     return sat_private@GetColoring(SolCNF, nbVert, nbColor);
-end;
+end);
 
 
 
-SAT_ChromaticNumber:=function(GRA)
-  local CliqueNr, nbColor, ListCNF, SolCNF;
-  CliqueNr:=Maximum(List(CompleteSubgraphs(GRA), Length));
-  nbColor:=CliqueNr;
-  while(true)
-  do
-    ListCNF:=sat_private@GetSatisfiabilityForColoring(GRA, nbColor);
-    SolCNF:=SolveCNF(ListCNF);
-    if SolCNF.result then
-      return nbColor;
-    fi;
-    nbColor:=nbColor+1;
-  od;
-end;
+InstallGlobalFunction(SAT_ChromaticNumber,
+function(GRA)
+    local CliqueNr, nbColor, ListCNF, SolCNF;
+    CliqueNr:=Maximum(List(CompleteSubgraphs(GRA), Length));
+    nbColor:=CliqueNr;
+    while(true)
+      do
+        ListCNF:=sat_private@GetSatisfiabilityForColoring(GRA, nbColor);
+        SolCNF:=SolveCNF(ListCNF);
+        if SolCNF.result then
+            return nbColor;
+        fi;
+        nbColor:=nbColor+1;
+    od;
+end);
