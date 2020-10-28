@@ -1,8 +1,4 @@
-FileMINISAT:=Filename(DirectoriesPackagePrograms("MyPolyhedral"),"minisat");
-FileConvertMINISAToutput:=Filename(DirectoriesPackagePrograms("MyPolyhedral"),"MinisatToGAP");
-
-
-GetSatisfiabilityForColoring:=function(GRA, nbColor)
+sat_private@GetSatisfiabilityForColoring:=function(GRA, nbColor)
   local MatrixIndex, n, i, eC, ListCNF, eCNF, fC, eAdj, pos1, pos2, pos;
   n:=GRA.order;
   MatrixIndex:=NullMat(n, nbColor);
@@ -72,7 +68,7 @@ end;
 
 
 
-GetColoring:=function(SolCNF, nbVert, nbColor)
+sat_private@GetColoring:=function(SolCNF, nbVert, nbColor)
   local MatrixIndex, pos, i, eC, ThePartition, VectorColoring;
   if SolCNF.result=false then
     return false;
@@ -108,33 +104,7 @@ GetColoring:=function(SolCNF, nbVert, nbColor)
 end;
 
 
-
-
-GetListCNFforbiddingSpecificColoring:=function(nbVert, nbColor, SpecificColoring)
-  local MatrixIndex, pos, i, eC, eCNF, iVert, eColor;
-  MatrixIndex:=NullMat(nbVert, nbColor);
-  pos:=0;
-  for i in [1..nbVert]
-  do
-    for eC in [1..nbColor]
-    do
-      pos:=pos+1;
-      MatrixIndex[i][eC]:=pos;
-    od;
-  od;
-  eCNF:=[];
-  for iVert in [1..nbVert]
-  do
-    eColor:=SpecificColoring[iVert];
-    pos:=MatrixIndex[iVert][eColor];
-    Add(eCNF, [-pos]);
-  od;
-  return [eCNF];
-end;
-
-
-
-GetListCNFspecifyingColorSomeVertices:=function(nbVert, nbColor, ListPair)
+sat_private@GetListCNFspecifyPartialColoring:=function(nbVert, nbColor, ListPair)
   local MatrixIndex, pos, i, eC, eCNF, iVert, eVert, eColor, ListCNF, ePair;
   MatrixIndex:=NullMat(nbVert, nbColor);
   pos:=0;
@@ -157,14 +127,40 @@ GetListCNFspecifyingColorSomeVertices:=function(nbVert, nbColor, ListPair)
   return ListCNF;
 end;
 
+SAT_ExtendPartialColoring:=function(GRA, nbColor, ListPair)
+    local ListCNF;
+    ListCNF:=sat_private@GetSatisfiabilityForColoring(GRA, nbColor);
+    nbVert:=GRA.order;
+    Append(ListCNF, sat_private@GetListCNFspecifyPartialColoring(nbVert, nbColor, ListPair));
+    SolCNF:=SolveCNF(ListCNF);
+    if SolCNF.result=false then
+        return false;
+    fi;
+    return sat_private@GetColoring(SolCNF, nbVert, nbColor);
+end;
 
-MINISAT_ChromaticNumber:=function(GRA)
+
+
+SAT_TestChromaticNumber:=function(GRA, nbColor)
+    local ListCNF, SolCNF, nbVert;
+    ListCNF:=sat_private@GetSatisfiabilityForColoring(GRA, nbColor);
+    SolCNF:=SolveCNF(ListCNF);
+    if SolCNF.result=false then
+        return false;
+    fi;
+    nbVert:=GRA.order;
+    return sat_private@GetColoring(SolCNF, nbVert, nbColor);
+end;
+
+
+
+SAT_ChromaticNumber:=function(GRA)
   local CliqueNr, nbColor, ListCNF, SolCNF;
   CliqueNr:=Maximum(List(CompleteSubgraphs(GRA), Length));
   nbColor:=CliqueNr;
   while(true)
   do
-    ListCNF:=GetSatisfiabilityForColoring(GRA, nbColor);
+    ListCNF:=sat_private@GetSatisfiabilityForColoring(GRA, nbColor);
     SolCNF:=SolveCNF(ListCNF);
     if SolCNF.result then
       return nbColor;
