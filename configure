@@ -20,8 +20,9 @@ print("the_file=", the_file)
 def get_architecture_name(e_file):
     f = open(e_file, "r")
     for x_line in f:
-        if x_line.find("GAParch"):
-            LStr = x_line.split("=")
+        if x_line.find("GAParch") >= 0:
+            y_line = x_line.rstrip()
+            LStr = y_line.split("=")
             return LStr[len(LStr)-1]
 
 
@@ -29,7 +30,20 @@ arch_name = get_architecture_name(the_file)
 print("arch_name=", arch_name)
 
 bin_directory = "bin/" + arch_name
-os.mkdir(bin_directory)
+print("bin_directory=", bin_directory)
+
+def create_directory(full_dir):
+    # We cannot assume that we run python 3.x
+    try:
+        os.makedirs(full_dir)
+    except OSError as exc:  # Python ≥ 2.5
+        if exc.errno == errno.EEXIST and os.path.isdir(path):
+            pass
+        else:
+            raise
+
+
+create_directory(bin_directory)
 
 def test_function_available(e_command):
     if shutil.which(e_command)==None:
