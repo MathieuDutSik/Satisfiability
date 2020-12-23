@@ -5,4 +5,5 @@ The GAP package `satisfiability'
 ================================
 
 This package provides functionality to solve satisfiability
-constraint problems.
+constraint problems. It provides access to the minisat program.
+
