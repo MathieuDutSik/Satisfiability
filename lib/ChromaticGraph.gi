@@ -129,7 +129,7 @@ end;
 
 InstallGlobalFunction(SAT_ExtendPartialColoring,
 function(GRA, nbColor, ListPair)
-    local ListCNF;
+    local ListCNF, nbVert, SolCNF;
     ListCNF:=sat_private@GetSatisfiabilityForColoring(GRA, nbColor);
     nbVert:=GRA.order;
     Append(ListCNF, sat_private@GetListCNFspecifyPartialColoring(nbVert, nbColor, ListPair));

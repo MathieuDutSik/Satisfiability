@@ -1,3 +1,5 @@
+BindGlobal("SATISFIABILITY_tmpdir",DirectoryTemporary());
+
 FileMINISAT:=Filename(DirectoriesPackagePrograms("MyPolyhedral"),"minisat");
 FileConvertMINISAToutput:=Filename(DirectoriesPackagePrograms("MyPolyhedral"),"MinisatToGAP");
 
@@ -5,10 +7,10 @@ FileConvertMINISAToutput:=Filename(DirectoriesPackagePrograms("MyPolyhedral"),"M
 InstallGlobalFunction(SolveCNF,
 function(ListCNF)
   local FileIn, FileErr, FileOut, FileRes, nbCNF, nbVAR, eCNF, LVal, output, eVal, TheCommand, TheRes;
-  FileIn:=Filename(POLYHEDRAL_tmpdir,"Minisat.in");
-  FileErr:=Filename(POLYHEDRAL_tmpdir,"Minisat.err");
-  FileOut:=Filename(POLYHEDRAL_tmpdir,"Minisat.out");
-  FileRes:=Filename(POLYHEDRAL_tmpdir,"Minisat.res");
+  FileIn:=Filename(SATISFIABILITY_tmpdir,"Minisat.in");
+  FileErr:=Filename(SATISFIABILITY_tmpdir,"Minisat.err");
+  FileOut:=Filename(SATISFIABILITY_tmpdir,"Minisat.out");
+  FileRes:=Filename(SATISFIABILITY_tmpdir,"Minisat.res");
   nbCNF:=Length(ListCNF);
   nbVAR:=0;
   for eCNF in ListCNF
@@ -32,10 +34,10 @@ function(ListCNF)
   TheCommand:=Concatenation(FileConvertMINISAToutput, " ", FileOut, " ", FileRes);
   Exec(TheCommand);
   TheRes:=ReadAsFunction(FileRes)();
-  RemoveFileIfExist(FileIn);
-  RemoveFileIfExist(FileErr);
-  RemoveFileIfExist(FileOut);
-  RemoveFileIfExist(FileRes);
+  RemoveFile(FileIn);
+  RemoveFile(FileErr);
+  RemoveFile(FileOut);
+  RemoveFile(FileRes);
   return TheRes;
 end);
 

@@ -4,7 +4,7 @@ FileConvertMINISAToutput:=Filename(DirectoriesPackagePrograms("MyPolyhedral"),"M
 
 InstallGlobalFunction(GetSatisfiabilityConstraintsTiling,
 function(nbPoint, ListTiles)
-    local nbTile, ListPairPack, iTile, jTile, TheInt, ListCovering, iPt, iTile, ePt, ListCNF, ePairPack, iTile1, iTile2, eCNF;
+    local nbTile, ListPairPack, iTile, jTile, TheInt, ListCovering, iPt, ePt, ListCNF, ePairPack, iTile1, iTile2, eCNF;
     nbTile:=Length(ListTiles);
     ListPairPack:=[];
     for iTile in [1..nbTile-1]
