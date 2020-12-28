@@ -1,7 +1,3 @@
-FileMINISAT:=Filename(DirectoriesPackagePrograms("MyPolyhedral"),"minisat");
-FileConvertMINISAToutput:=Filename(DirectoriesPackagePrograms("MyPolyhedral"),"MinisatToGAP");
-
-
 InstallGlobalFunction(GetSatisfiabilityConstraintsTiling,
 function(nbPoint, ListTiles)
     local nbTile, ListPairPack, iTile, jTile, TheInt, ListCovering, iPt, ePt, ListCNF, ePairPack, iTile1, iTile2, eCNF;
