@@ -146,11 +146,11 @@ InstallGlobalFunction(SAT_TestChromaticNumber,
 function(GRA, nbColor)
     local ListCNF, SolCNF, nbVert;
     ListCNF:=sat_private@GetSatisfiabilityForColoring(GRA, nbColor);
+    nbVert:=GRA.order;
     SolCNF:=SolveCNF(ListCNF);
     if SolCNF.result=false then
         return false;
     fi;
-    nbVert:=GRA.order;
     return sat_private@GetColoring(SolCNF, nbVert, nbColor);
 end);
 

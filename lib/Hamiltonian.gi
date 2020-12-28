@@ -1,6 +1,6 @@
 # We follow here https://www.csie.ntu.edu.tw/~lyuu/complexity/2011/20111018.pdf
-sat_private@GetSatisfiabilityForHamiltonianCycle:=function(GRA)
-    local MatrixIndex;
+sat_private@GetSatisfiabilityForHamiltonianCyclePath:=function(GRA, IsCycle)
+    local n, MatrixIndex, pos, i, j, ListCNF, eCNF, i1, i2, j1, j2, ListNotEdges, LNotAdj, eAdj, last_n, k, kNext, eEdge;
     n := GRA.order;
     MatrixIndex:=NullMat(n, n);
     # Variable XIJ is if the entry on position i is vertex j.
@@ -69,7 +69,12 @@ sat_private@GetSatisfiabilityForHamiltonianCycle:=function(GRA)
         od;
     od;
     # Non-Adjacenmt node (i,j) cannot be adjacent in the path
-    for k in [1..n]
+    if IsCycle then
+        last_n:=n;
+    else
+        last_n:=n-1;
+    fi;
+    for k in [1..last_n]
     do
         if k<n then
             kNext:=k+1;
@@ -80,6 +85,8 @@ sat_private@GetSatisfiabilityForHamiltonianCycle:=function(GRA)
         do
             eCNF:=[ -MatrixIndex[k][eEdge[1]], -MatrixIndex[kNext][eEdge[2]] ];
             Add(ListCNF, eCNF);
+            eCNF:=[ -MatrixIndex[k][eEdge[2]], -MatrixIndex[kNext][eEdge[1]] ];
+            Add(ListCNF, eCNF);
         od;
     od;
     # Returning the List of conditions
@@ -87,26 +94,40 @@ sat_private@GetSatisfiabilityForHamiltonianCycle:=function(GRA)
 end;
 
 
-InstallGlobalFunction(SAT_HamiltonianCycle,
-function(GRA)
-    local ListCNF, SolCNF, n;
-    ePair:=sat_private@GetSatisfiabilityForHamiltonianCycle(GRA);
+
+sat_private@TestHamiltonianCyclePath:=function(GRA, IsCycle)
+    local ePair, MatrixIndex, ListCNF, SolCNF, n, eSeq, i, j;
+    ePair:=sat_private@GetSatisfiabilityForHamiltonianCyclePath(GRA, IsCycle);
     MatrixIndex:=ePair[1];
     ListCNF:=ePair[2];
     SolCNF:=SolveCNF(ListCNF);
     if SolCNF.result then
         n:=GRA.order;
-        eCycle:=[];
-        for i [1..n]
+        eSeq:=[];
+        for i in [1..n]
         do
             for j in [1..n]
             do
                 if SolCNF.sat[MatrixIndex[i][j]]=1 then
-                    Add(eCycle, j);
+                    Add(eSeq, j);
                 fi;
             od;
         od;
-        return eCycle;
+        return eSeq;
     fi;
     return fail;
+end;
+
+
+
+InstallGlobalFunction(SAT_HamiltonianCycle,
+function(GRA)
+    return sat_private@TestHamiltonianCyclePath(GRA, true);
+end);
+
+
+
+InstallGlobalFunction(SAT_HamiltonianPath,
+function(GRA)
+    return sat_private@TestHamiltonianCyclePath(GRA, false);
 end);

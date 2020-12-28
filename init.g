@@ -14,3 +14,4 @@
 ReadPackage("satisfiability", "lib/Satisfiability.gd");
 ReadPackage("satisfiability", "lib/ChromaticGraph.gd");
 ReadPackage("satisfiability", "lib/ExactTiling.gd");
+ReadPackage("satisfiability", "lib/Hamiltonian.gd");
