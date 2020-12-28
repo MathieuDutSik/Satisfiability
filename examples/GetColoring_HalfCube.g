@@ -21,12 +21,8 @@ end;
 
 
 for n in [4..8]
-  do
+do
     GRA:=GetHalfCube(n);
     Print("n=", n, " chromatic=", SAT_ChromaticNumber(GRA), "\n");
 od;
 
-
-Print("Computing a coloring for n=9\n");
-GRA9:=GetHalfCube(9);
-TheColoring:=SAT_TestChromaticNumber(GRA9, 13);
