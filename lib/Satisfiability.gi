@@ -42,7 +42,7 @@ function(ListCNF)
 end);
 
 
-InstallGlobalFunction(SolveCNF_number,
+InstallGlobalFunction(AllSolutionCNF,
 function(ListCNF, nbMax)
   local ListSolution, ListCNFcomplex, eCNF, eSol, fCNF, len, iVert, SolCNF;
   ListSolution:=[];
@@ -68,10 +68,10 @@ function(ListCNF, nbMax)
       Add(ListCNFcomplex, fCNF);
     od;
     SolCNF:=SolveCNF(ListCNFcomplex);
-    Print("SolCNF obtained\n");
     if SolCNF.result=false then
       break;
     fi;
+    Add(ListSolution, SolCNF.sat);
     if nbMax>0 then
       if Length(ListSolution)=nbMax then
         break;

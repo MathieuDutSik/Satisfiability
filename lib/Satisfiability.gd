@@ -1,2 +1,2 @@
 DeclareGlobalFunction("SolveCNF");
-DeclareGlobalFunction("SolveCNF_number");
+DeclareGlobalFunction("AllSolutionCNF");

@@ -1,5 +1,5 @@
 GetListSet:=function(n, m)
-    local ListSet, i, eList, j;
+    local ListSet, i, eList, j, pos;
     ListSet:=[];
     for i in [1..n]
       do
@@ -16,3 +16,8 @@ GetListSet:=function(n, m)
     od;
     return ListSet;
 end;
+
+ListTiles:=GetListSet(10,5);
+ListCNF:=GetSatisfiabilityConstraintsTiling(10, ListTiles);
+ListSol:=AllSolutionCNF(ListCNF, -1);
+
